@@ -40,22 +40,100 @@
     </main>
 
     <!--Cover area-->
-    <main id="profile" class="container" style="display: none;">
-        <!--Ash: Buhati ni, apila sample na account-->
+    <main id="profile" class="container">
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Date Created</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar"> Andrew Mike</td>
+                    <td>04/10/2014</td>
+                    <td>Admin</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/2.jpg" alt="avatar"> John Doe</td>
+                    <td>06/09/2015</td>
+                    <td>Publisher</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/3.jpg" alt="avatar"> Micheal Holz</td>
+                    <td>09/05/2016</td>
+                    <td>Publisher</td>
+                    <td><span class="status-dot inactive"></span> Inactive</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/4.jpg" alt="avatar"> Alex Mike</td>
+                    <td>11/09/2018</td>
+                    <td>Reviewer</td>
+                    <td><span class="status-dot suspended"></span> Suspended</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/women/5.jpg" alt="avatar"> Paula Wilson</td>
+                    <td>09/09/2019</td>
+                    <td>Reviewer</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/6.jpg" alt="avatar"> Martin Sommer</td>
+                    <td>04/10/2020</td>
+                    <td>Moderator</td>
+                    <td><span class="status-dot inactive"></span> Inactive</td>
+                    <td>
+                        <span class="action-icon edit" title="Edit"></span>
+                        <span class="action-icon deactivate" title="Deactivate"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
 
-        </main>
+    <main id="workspace" class="container section" style="display: none;">
+    <!--Ash: Buhati ni, sample ra gihapon na activity log dani-->
+    </main>
 
-        <main id="workspace" class="container section" style="display: none;">
-        <!--Ash: Buhati ni, sample ra gihapon na activity log dani-->
-        </main>
-
-        </div>
-        <div id="logout-confirmation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-         background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-        <p>Are you sure you want to log out?</p>
-        <button onclick="logout()">Yes</button>
-        <button onclick="hideLogoutConfirmation()">No</button>
     </div>
+    <div id="logout-confirmation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+     background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <p>Are you sure you want to log out?</p>
+    <button onclick="logout()">Yes</button>
+    <button onclick="hideLogoutConfirmation()">No</button>
+</div>
 
 </body>
 
