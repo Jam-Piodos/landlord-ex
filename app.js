@@ -11,7 +11,7 @@ function navigateTo(page) {
 }
 
 // Initial navigation to the profile page
-navigateTo('profile');
+navigateTo('home');
 
 // Function to accept work and move the post to the Workspace section
 function acceptWork(button) {
