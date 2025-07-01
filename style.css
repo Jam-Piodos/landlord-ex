@@ -476,3 +476,41 @@ nav a:hover {
     padding-top: 140px;
 }
 
+.activity-log-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 15px;
+}
+.activity-log-table th, .activity-log-table td {
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+.activity-log-table th {
+    background: #f8fafd;
+    color: #00bcd4;
+    font-weight: bold;
+    border-bottom: 2px solid #e0e0e0;
+}
+.activity-log-table tr:last-child td {
+    border-bottom: none;
+}
+.log-status {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+}
+.log-status.succeeded {
+    background: #4caf50;
+}
+
