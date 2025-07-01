@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LandLord</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--top area-->
+    <div class="box">
+        <h1>LANDLORD</h1>
+        <img id="dp" 
+            src="https://tse2.mm.bing.net/th?id=OIP.yYUwl3GDU07Q5J5ttyW9fQHaHa&pid=Api&P=0&h=220" 
+            alt="User Icon" 
+            onclick="showLogoutConfirmation()" 
+            style="cursor: pointer;">
+    </div>
+
+
+    <nav>
+        <ul>
+            <li><a href="#" onclick="navigateTo('home')">HOME</a></li>
+            <li><a href="#" onclick="navigateTo('map')">MAP</a></li>
+            <li><a href="#" onclick="navigateTo('profile')">USER MANAGEMENT</a></li>
+            <li><a href="#" onclick="navigateTo('workspace')">ACTIVITY LOGS</a></li>
+        </ul>
+    </nav>
+    </div>
+
+    <main id="home" class="container">
+        <!--Ash: Pie chart diri ug reports. Gamiti google chart-->
+
+    </main>
+
+    <main id="map" class="container">
+        <!--Jam: Map ni-->
+
+    </main>
+
+    <!--Cover area-->
+    <main id="profile" class="container" style="display: none;">
+        <!--Ash: Buhati ni, apila sample na account-->
+
+        </main>
+
+        <main id="workspace" class="container section" style="display: none;">
+        <!--Ash: Buhati ni, sample ra gihapon na activity log dani-->
+        </main>
+
+        </div>
+        <div id="logout-confirmation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+         background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <p>Are you sure you want to log out?</p>
+        <button onclick="logout()">Yes</button>
+        <button onclick="hideLogoutConfirmation()">No</button>
+    </div>
+
+</body>
+
+<script src="app.js"></script>
+
+</html>
