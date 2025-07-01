@@ -10,8 +10,8 @@ function navigateTo(page) {
     selectedSection.style.display = 'block';
 }
 
-// Initial navigation to the home page
-navigateTo('home');
+// Initial navigation to the profile page
+navigateTo('profile');
 
 // Function to accept work and move the post to the Workspace section
 function acceptWork(button) {
