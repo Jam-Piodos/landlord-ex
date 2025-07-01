@@ -74,3 +74,4 @@ function navigateTo(sectionId) {
         function logout() {
             window.location.href = 'index.html'; // Redirect to login page
         }
+        
