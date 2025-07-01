@@ -30,8 +30,33 @@
     </div>
 
     <main id="home" class="container">
-        <!--Ash: Pie chart diri ug reports. Gamiti google chart-->
-
+        <div class="dashboard-cards">
+            <div class="dashboard-card attendance">
+                <div class="card-title"><span class="dot green"></span> Attendance</div>
+                <div class="card-value">98%</div>
+                <div class="card-meta">Last attend: 02 March, 2020<br>Reason: Torchbearer</div>
+            </div>
+            <div class="dashboard-card fee-due">
+                <div class="card-title"><span class="dot yellow"></span> Fee Due <span class="send-notice">Send Notice</span></div>
+                <div class="card-value">৳ 12650.00</div>
+                <div class="card-meta">Last paid: 02 March, 2020<br>Method: Online</div>
+            </div>
+            <div class="dashboard-card exam-marks">
+                <div class="card-title"><span class="dot blue"></span> Exam Marks</div>
+                <div class="card-value">92%</div>
+                <div class="card-meta">Last exam: 1st Semester<br>Top Marks: English (98%)</div>
+            </div>
+        </div>
+        <div class="dashboard-charts">
+            <div class="chart-section">
+                <h3>Recent Exam Report</h3>
+                <div id="barchart_div" style="width: 400px; height: 300px;"></div>
+            </div>
+            <div class="chart-section">
+                <h3>Attendance Summary</h3>
+                <div id="piechart" style="width: 400px; height: 300px;"></div>
+            </div>
+        </div>
     </main>
 
     <main id="map" class="container">
@@ -179,5 +204,55 @@
 </body>
 
 <script src="app.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart', 'bar']});
+  google.charts.setOnLoadCallback(drawCharts);
+
+  function drawCharts() {
+    // Pie chart
+    var pieData = google.visualization.arrayToDataTable([
+      ['Status', 'Count'],
+      ['Attendance', 80],
+      ['Absent', 10],
+      ['Early Leave', 10]
+    ]);
+    var pieOptions = {
+      title: '',
+      legend: { position: 'bottom', alignment: 'center', textStyle: {fontSize: 12} },
+      pieHole: 0.4,
+      colors: ['#4b3fff', '#ffb347', '#ff5252'],
+      chartArea: {left: 10, top: 10, width: '100%', height: '75%'},
+      fontSize: 13
+    };
+    var pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
+    pieChart.draw(pieData, pieOptions);
+
+    // Bar chart (now using ColumnChart for better responsiveness)
+    var barData = google.visualization.arrayToDataTable([
+      ['Subject', "Student's Mark", 'Class Average'],
+      ['Eng', 90, 85],
+      ['Math', 88, 80],
+      ['Sci', 92, 87],
+      ['Hist', 85, 82],
+      ['Geo', 87, 84],
+      ['Bus', 80, 78],
+      ['Art', 95, 90]
+    ]);
+    var barOptions = {
+      legend: { position: 'bottom', alignment: 'center', textStyle: {fontSize: 12} },
+      colors: ['#4b3fff', '#b3b3b3'],
+      vAxis: {format: 'decimal', minValue: 0, maxValue: 100},
+      height: 220,
+      chartArea: {left: 40, top: 20, width: '100%', height: '65%'},
+      bar: { groupWidth: "60%" },
+      fontSize: 13
+    };
+    var barChart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+    barChart.draw(barData, barOptions);
+  }
+
+  window.addEventListener('resize', drawCharts);
+</script>
 
 </html>

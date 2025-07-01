@@ -514,3 +514,153 @@ nav a:hover {
     background: #4caf50;
 }
 
+.dashboard-cards {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    justify-content: space-between;
+}
+.dashboard-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 24px 32px 18px 24px;
+    min-width: 220px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+.dashboard-card .card-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.dashboard-card .card-value {
+    font-size: 2.2em;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #4b3fff;
+}
+.dashboard-card .card-meta {
+    font-size: 0.95em;
+    color: #888;
+}
+.dashboard-card.fee-due .card-value {
+    color: #ffb347;
+}
+.dashboard-card.exam-marks .card-value {
+    color: #00bcd4;
+}
+.send-notice {
+    color: #ff5252;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+.dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+.dot.green { background: #4caf50; }
+.dot.yellow { background: #ffb347; }
+.dot.blue { background: #00bcd4; }
+
+.dashboard-charts {
+    display: flex;
+    gap: 32px;
+    justify-content: space-between;
+}
+.chart-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 18px 12px 8px 12px;
+    flex: 1;
+    min-width: 350px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+.chart-section h3 {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#home {
+    padding-top: 170px;
+}
+@media (max-width: 768px) {
+    #home {
+        padding-top: 100px;
+    }
+    .dashboard-cards {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .dashboard-card {
+        min-width: 0;
+        padding: 16px 12px 12px 12px;
+        font-size: 0.95em;
+    }
+    .dashboard-card .card-title {
+        font-size: 1em;
+    }
+    .dashboard-card .card-value {
+        font-size: 1.5em;
+    }
+    .dashboard-charts {
+        flex-direction: column;
+        gap: 0;
+    }
+    .chart-section {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 24px;
+    }
+    .chart-section:last-child {
+        margin-bottom: 0;
+    }
+    #barchart_div, #piechart {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 220px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #home {
+        padding-top: 200px;
+    }
+    .dashboard-card {
+        padding: 10px 4px 8px 4px;
+    }
+    .dashboard-card .card-title {
+        font-size: 0.95em;
+    }
+    .dashboard-card .card-value {
+        font-size: 1.1em;
+    }
+    .chart-section h3 {
+        font-size: 0.95em;
+    }
+}
+#barchart_div, #piechart {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 200px !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: block;
+}
+
