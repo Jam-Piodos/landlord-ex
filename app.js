@@ -131,7 +131,10 @@ async function fetchAndRenderUsers() {
         ${user.user_firstname || ''} ${user.user_lastname || ''}
       </td>
       <td>${user.role || ''}</td>
-      <td><span class="status-dot ${user.active !== false ? 'active' : 'deactivated'}"></span> ${user.active !== false ? 'Active' : 'Deactivated'}</td>
+      <td>
+        <span class="status-dot ${user.active !== false ? 'active' : 'deactivated'}"></span>
+        ${user.active !== false ? 'Active' : 'Deactivated'}
+      </td>
       <td>
         <button class="action-btn edit"><span class="action-icon edit"></span> Edit</button>
         <button class="action-btn deactivate${user.active !== false ? '' : ' active'}"><span class="action-icon deactivate"></span> ${user.active !== false ? 'Deactivate' : 'Activate'}</button>
