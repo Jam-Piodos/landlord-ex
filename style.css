@@ -664,61 +664,155 @@ nav a:hover {
     display: block;
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.3);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    margin-right: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
-.modal-content {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  min-width: 300px;
-  max-width: 90vw;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-  position: relative;
+.action-btn.edit {
+    background: #e3f2fd;
+    color: #1976d2;
 }
-#edit-user-form .form-group {
-  margin-bottom: 14px;
+.action-btn.deactivate {
+    background: #ffebee;
+    color: #c62828;
 }
-#edit-user-form label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
+.action-btn.deactivate.active {
+    background: #e8f5e9;
+    color: #388e3c;
 }
-#edit-user-form input, #edit-user-form select {
-  width: 100%;
-  padding: 7px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1em;
+.action-btn:hover {
+    background: #ececec;
+    color: #111;
 }
-.save-btn, .cancel-btn {
-  padding: 8px 18px;
-  border: none;
-  border-radius: 4px;
-  font-size: 1em;
-  cursor: pointer;
+.action-btn.edit:hover {
+    background: #bbdefb;
+    color: #0d47a1;
 }
-.save-btn {
-  background: #4b3fff;
-  color: #fff;
+.action-btn.deactivate:hover {
+    background: #ffcdd2;
+    color: #b71c1c;
 }
-.save-btn:hover {
-  background: #372bb1;
+.action-btn.deactivate.active:hover {
+    background: #c8e6c9;
+    color: #1b5e20;
 }
-.cancel-btn {
-  background: #eee;
-  color: #333;
+
+#edit-user-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.35);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    /* Blur background */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: modal-fade-in 0.25s;
 }
-.cancel-btn:hover {
-  background: #ccc;
+#edit-user-modal.active {
+    display: flex;
+}
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+#edit-user-modal .modal-content {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 32px 28px 24px 28px;
+    min-width: 320px;
+    max-width: 95vw;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: modal-content-fade-in 0.3s;
+    margin: 0;
+}
+@keyframes modal-content-fade-in {
+    from { transform: translateY(30px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+#edit-user-modal h2 {
+    margin-top: 0;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+#edit-user-modal label {
+    font-size: 1em;
+    color: #444;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+#edit-user-modal input, #edit-user-modal select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    font-size: 1em;
+    margin-bottom: 10px;
+    background: #fafbfc;
+    transition: border 0.2s;
+}
+#edit-user-modal input:focus, #edit-user-modal select:focus {
+    border: 1.5px solid #4b3fff;
+    outline: none;
+}
+#edit-user-modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+#edit-user-modal .modal-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+#edit-user-modal .modal-btn.save {
+    background: #4b3fff;
+    color: #fff;
+}
+#edit-user-modal .modal-btn.save:hover {
+    background: #2a1fd0;
+}
+#edit-user-modal .modal-btn.cancel {
+    background: #f5f5f5;
+    color: #333;
+}
+#edit-user-modal .modal-btn.cancel:hover {
+    background: #e0e0e0;
+}
+@media (max-width: 500px) {
+    #edit-user-modal .modal-content {
+        padding: 18px 6vw 14px 6vw;
+        min-width: 0;
+        max-width: 98vw;
+    }
 }
 

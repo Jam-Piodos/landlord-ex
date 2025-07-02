@@ -8,23 +8,17 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Fetch users from Supabase and populate the user management table
 document.addEventListener('DOMContentLoaded', () => {
   fetchAndRenderUsers();
-  // Event delegation for edit and deactivate/reactivate
+  // Event delegation for action buttons
   document.querySelector('#profile .account-table tbody').addEventListener('click', async function(e) {
-    const row = e.target.closest('tr');
-    if (!row) return;
-    const userId = row.getAttribute('data-user-id');
-    if (!userId) return;
-    // Edit user
-    if (e.target.classList.contains('edit')) {
+    // Deactivate/Activate
+    if (e.target.closest('.deactivate')) {
+      const btn = e.target.closest('.deactivate');
+      const row = btn.closest('tr');
+      const userId = row.getAttribute('data-user-id');
+      if (!userId) return alert('User not found');
+      // Get current status
       const users = await getUsers();
-      const user = users.find(u => String(u.user_id) === userId);
-      if (!user) return alert('User not found');
-      openEditUserModal(user);
-    }
-    // Deactivate/reactivate user
-    if (e.target.classList.contains('deactivate')) {
-      const users = await getUsers();
-      const user = users.find(u => String(u.user_id) === userId);
+      const user = users.find(u => String(u.user_id) === String(userId));
       if (!user) return alert('User not found');
       const newStatus = !user.active;
       const { error } = await supabase
@@ -34,31 +28,73 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error) return alert('Failed to update status');
       fetchAndRenderUsers();
     }
+    // Edit
+    if (e.target.closest('.edit')) {
+      const btn = e.target.closest('.edit');
+      const row = btn.closest('tr');
+      const userId = row.getAttribute('data-user-id');
+      if (!userId) return alert('User not found');
+      const users = await getUsers();
+      const user = users.find(u => String(u.user_id) === String(userId));
+      if (!user) return alert('User not found');
+      // Populate modal fields (example: you can add more fields as needed)
+      document.getElementById('edit-user-modal').classList.add('active');
+      document.getElementById('edit-user-id').value = user.user_id;
+      document.getElementById('edit-user-firstname').value = user.user_firstname || '';
+      document.getElementById('edit-user-lastname').value = user.user_lastname || '';
+      document.getElementById('edit-user-role').value = user.role || '';
+      document.getElementById('edit-user-email').value = user.user_email || '';
+    }
   });
 
-  // Modal event listeners
-  document.querySelector('.cancel-btn').onclick = closeEditUserModal;
-  document.getElementById('edit-user-modal').onclick = function(e) {
-    if (e.target === this) closeEditUserModal();
-  };
-  document.getElementById('edit-user-form').onsubmit = async function(e) {
-    e.preventDefault();
-    const user_id = document.getElementById('edit-user-id').value;
-    const user_firstname = document.getElementById('edit-user-firstname').value;
-    const user_lastname = document.getElementById('edit-user-lastname').value;
-    const user_email = document.getElementById('edit-user-email').value;
-    const role = document.getElementById('edit-user-role').value;
-    const { error } = await supabase
-      .from('users')
-      .update({ user_firstname, user_lastname, user_email, role })
-      .eq('user_id', user_id);
-    if (error) {
-      alert('Failed to update user');
-      return;
+  // Modal Save and Cancel functionality
+  const modal = document.getElementById('edit-user-modal');
+  if (modal) {
+    // Cancel button
+    modal.querySelector('.modal-btn.cancel').onclick = function() {
+      modal.classList.remove('active');
+    };
+    // Save button
+    modal.querySelector('.modal-btn.save').onclick = async function() {
+      const user_id = modal.querySelector('#edit-user-id').value;
+      const user_firstname = modal.querySelector('#edit-user-firstname').value;
+      const user_lastname = modal.querySelector('#edit-user-lastname').value;
+      const user_role = modal.querySelector('#edit-user-role').value;
+      const user_avatar_url = modal.querySelector('#edit-user-avatar').value;
+      const user_email = modal.querySelector('#edit-user-email').value;
+      const { error } = await supabase
+        .from('users')
+        .update({
+          user_firstname,
+          user_lastname,
+          role: user_role,
+          user_avatar_url,
+          user_email
+        })
+        .eq('user_id', user_id);
+      if (error) {
+        alert('Failed to update user');
+        return;
+      }
+      modal.classList.remove('active');
+      fetchAndRenderUsers();
+    };
+    // Close button
+    const closeBtn = document.getElementById('close-edit-modal');
+    if (closeBtn) {
+      closeBtn.onclick = function() {
+        modal.classList.remove('active');
+      };
     }
-    closeEditUserModal();
-    fetchAndRenderUsers();
-  };
+    // Live avatar preview
+    const avatarInput = document.getElementById('edit-user-avatar');
+    const avatarPreview = document.getElementById('edit-user-avatar-preview');
+    if (avatarInput && avatarPreview) {
+      avatarInput.addEventListener('input', function() {
+        avatarPreview.src = avatarInput.value || 'https://randomuser.me/api/portraits/lego/1.jpg';
+      });
+    }
+  }
 });
 
 async function getUsers() {
@@ -95,10 +131,10 @@ async function fetchAndRenderUsers() {
         ${user.user_firstname || ''} ${user.user_lastname || ''}
       </td>
       <td>${user.role || ''}</td>
-      <td><span class="status-dot ${user.active !== false ? 'active' : 'inactive'}"></span> ${user.active !== false ? 'Active' : 'Inactive'}</td>
+      <td><span class="status-dot ${user.active !== false ? 'active' : 'deactivated'}"></span> ${user.active !== false ? 'Active' : 'Deactivated'}</td>
       <td>
-        <span class="action-icon edit" title="Edit"></span>
-        <span class="action-icon deactivate" title="${user.active !== false ? 'Deactivate' : 'Reactivate'}"></span>
+        <button class="action-btn edit"><span class="action-icon edit"></span> Edit</button>
+        <button class="action-btn deactivate${user.active !== false ? '' : ' active'}"><span class="action-icon deactivate"></span> ${user.active !== false ? 'Deactivate' : 'Activate'}</button>
       </td>
     </tr>
   `).join('');
@@ -180,17 +216,4 @@ function navigateTo(sectionId) {
         function logout() {
             window.location.href = 'index.html'; // Redirect to login page
         }
-
-function openEditUserModal(user) {
-  document.getElementById('edit-user-id').value = user.user_id;
-  document.getElementById('edit-user-firstname').value = user.user_firstname || '';
-  document.getElementById('edit-user-lastname').value = user.user_lastname || '';
-  document.getElementById('edit-user-email').value = user.user_email || '';
-  document.getElementById('edit-user-role').value = user.role || '';
-  document.getElementById('edit-user-modal').style.display = 'flex';
-}
-
-function closeEditUserModal() {
-  document.getElementById('edit-user-modal').style.display = 'none';
-}
         
