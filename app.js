@@ -60,20 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const user_firstname = modal.querySelector('#edit-user-firstname').value;
       const user_lastname = modal.querySelector('#edit-user-lastname').value;
       const user_role = modal.querySelector('#edit-user-role').value;
-      const user_avatar_url = modal.querySelector('#edit-user-avatar').value;
       const user_email = modal.querySelector('#edit-user-email').value;
+      // Optionally, add active status if you want to edit it in the modal
+      // const active = modal.querySelector('#edit-user-active').checked;
       const { error } = await supabase
         .from('users')
         .update({
           user_firstname,
           user_lastname,
           role: user_role,
-          user_avatar_url,
           user_email
+          // , active
         })
         .eq('user_id', user_id);
       if (error) {
-        alert('Failed to update user');
+        alert('Failed to update user: ' + error.message);
         return;
       }
       modal.classList.remove('active');
