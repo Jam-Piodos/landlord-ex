@@ -1,3 +1,148 @@
+// Add Supabase client initialization
+// Replace with your actual values from the Supabase dashboard
+const SUPABASE_URL = 'https://ozkxzvpiiqhhzbyzetsy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96a3h6dnBpaXFoaHpieXpldHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMjcwMTksImV4cCI6MjA2NjYwMzAxOX0.ra2xvmu97bESlkHkwvPIKjbbccJbQYyHbbFzbJXa4sU';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Fetch users from Supabase and populate the user management table
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAndRenderUsers();
+  // Event delegation for action buttons
+  document.querySelector('#profile .account-table tbody').addEventListener('click', async function(e) {
+    // Deactivate/Activate
+    if (e.target.closest('.deactivate')) {
+      const btn = e.target.closest('.deactivate');
+      const row = btn.closest('tr');
+      const userId = row.getAttribute('data-user-id');
+      if (!userId) return alert('User not found');
+      // Get current status
+      const users = await getUsers();
+      const user = users.find(u => String(u.user_id) === String(userId));
+      if (!user) return alert('User not found');
+      const newStatus = !user.active;
+      const { error } = await supabase
+        .from('users')
+        .update({ active: newStatus })
+        .eq('user_id', user.user_id);
+      if (error) return alert('Failed to update status');
+      fetchAndRenderUsers();
+    }
+    // Edit
+    if (e.target.closest('.edit')) {
+      const btn = e.target.closest('.edit');
+      const row = btn.closest('tr');
+      const userId = row.getAttribute('data-user-id');
+      if (!userId) return alert('User not found');
+      const users = await getUsers();
+      const user = users.find(u => String(u.user_id) === String(userId));
+      if (!user) return alert('User not found');
+      // Populate modal fields (example: you can add more fields as needed)
+      document.getElementById('edit-user-modal').classList.add('active');
+      document.getElementById('edit-user-id').value = user.user_id;
+      document.getElementById('edit-user-firstname').value = user.user_firstname || '';
+      document.getElementById('edit-user-lastname').value = user.user_lastname || '';
+      document.getElementById('edit-user-role').value = user.role || '';
+      document.getElementById('edit-user-email').value = user.user_email || '';
+    }
+  });
+
+  // Modal Save and Cancel functionality
+  const modal = document.getElementById('edit-user-modal');
+  if (modal) {
+    // Cancel button
+    modal.querySelector('.modal-btn.cancel').onclick = function() {
+      modal.classList.remove('active');
+    };
+    // Save button
+    modal.querySelector('.modal-btn.save').onclick = async function() {
+      const user_id = modal.querySelector('#edit-user-id').value;
+      const user_firstname = modal.querySelector('#edit-user-firstname').value;
+      const user_lastname = modal.querySelector('#edit-user-lastname').value;
+      const user_role = modal.querySelector('#edit-user-role').value;
+      const user_avatar_url = modal.querySelector('#edit-user-avatar').value;
+      const user_email = modal.querySelector('#edit-user-email').value;
+      const { error } = await supabase
+        .from('users')
+        .update({
+          user_firstname,
+          user_lastname,
+          role: user_role,
+          user_avatar_url,
+          user_email
+        })
+        .eq('user_id', user_id);
+      if (error) {
+        alert('Failed to update user');
+        return;
+      }
+      modal.classList.remove('active');
+      fetchAndRenderUsers();
+    };
+    // Close button
+    const closeBtn = document.getElementById('close-edit-modal');
+    if (closeBtn) {
+      closeBtn.onclick = function() {
+        modal.classList.remove('active');
+      };
+    }
+    // Live avatar preview
+    const avatarInput = document.getElementById('edit-user-avatar');
+    const avatarPreview = document.getElementById('edit-user-avatar-preview');
+    if (avatarInput && avatarPreview) {
+      avatarInput.addEventListener('input', function() {
+        avatarPreview.src = avatarInput.value || 'https://randomuser.me/api/portraits/lego/1.jpg';
+      });
+    }
+  }
+});
+
+async function getUsers() {
+  const { data: users } = await supabase
+    .from('users')
+    .select('*')
+    .order('user_id', { ascending: true });
+  return users || [];
+}
+
+async function fetchAndRenderUsers() {
+  const tableBody = document.querySelector('#profile .account-table tbody');
+  if (!tableBody) return;
+  tableBody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+
+  const { data: users, error } = await supabase
+    .from('users')
+    .select('*')
+    .order('user_id', { ascending: true });
+
+  if (error) {
+    tableBody.innerHTML = `<tr><td colspan="4">Error loading users.</td></tr>`;
+    return;
+  }
+  if (!users || users.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="4">No users found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = users.map(user => `
+    <tr data-user-id="${user.user_id}">
+      <td>
+        <img class="user-avatar" src="${user.user_avatar_url || 'https://randomuser.me/api/portraits/lego/1.jpg'}" alt="avatar">
+        ${user.user_firstname || ''} ${user.user_lastname || ''}
+      </td>
+      <td>${user.role || ''}</td>
+      <td>
+        <span class="status-dot ${user.active !== false ? 'active' : 'deactivated'}"></span>
+        ${user.active !== false ? 'Active' : 'Deactivated'}
+      </td>
+      <td>
+        <button class="action-btn edit"><span class="action-icon edit"></span> Edit</button>
+        <button class="action-btn deactivate${user.active !== false ? '' : ' active'}"><span class="action-icon deactivate"></span> ${user.active !== false ? 'Deactivate' : 'Activate'}</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
 function navigateTo(page) {
     // Hide all content sections
     const contentSections = document.querySelectorAll('main');

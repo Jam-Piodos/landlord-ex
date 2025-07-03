@@ -7,15 +7,13 @@
     <title>LandLord</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!--top area-->
     <div class="box">
         <h1>LANDLORD</h1>
-        <img id="dp" 
-            src="https://tse2.mm.bing.net/th?id=OIP.yYUwl3GDU07Q5J5ttyW9fQHaHa&pid=Api&P=0&h=220" 
-            alt="User Icon" 
-            onclick="showLogoutConfirmation()" 
-            style="cursor: pointer;">
+        <img id="dp" src="https://tse2.mm.bing.net/th?id=OIP.yYUwl3GDU07Q5J5ttyW9fQHaHa&pid=Api&P=0&h=220"
+            alt="User Icon" onclick="showLogoutConfirmation()" style="cursor: pointer;">
     </div>
 
 
@@ -37,7 +35,8 @@
                 <div class="card-meta">Last attend: 02 March, 2020<br>Reason: Torchbearer</div>
             </div>
             <div class="dashboard-card fee-due">
-                <div class="card-title"><span class="dot yellow"></span> Fee Due <span class="send-notice">Send Notice</span></div>
+                <div class="card-title"><span class="dot yellow"></span> Fee Due <span class="send-notice">Send
+                        Notice</span></div>
                 <div class="card-value">৳ 12650.00</div>
                 <div class="card-meta">Last paid: 02 March, 2020<br>Method: Online</div>
             </div>
@@ -69,81 +68,14 @@
         <table class="account-table">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
-                    <th>Date Created</th>
                     <th>Role</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar"> Andrew Mike</td>
-                    <td>04/10/2014</td>
-                    <td>Admin</td>
-                    <td><span class="status-dot active"></span> Active</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/2.jpg" alt="avatar"> John Doe</td>
-                    <td>06/09/2015</td>
-                    <td>Publisher</td>
-                    <td><span class="status-dot active"></span> Active</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/3.jpg" alt="avatar"> Micheal Holz</td>
-                    <td>09/05/2016</td>
-                    <td>Publisher</td>
-                    <td><span class="status-dot inactive"></span> Inactive</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/4.jpg" alt="avatar"> Alex Mike</td>
-                    <td>11/09/2018</td>
-                    <td>Reviewer</td>
-                    <td><span class="status-dot suspended"></span> Suspended</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/women/5.jpg" alt="avatar"> Paula Wilson</td>
-                    <td>09/09/2019</td>
-                    <td>Reviewer</td>
-                    <td><span class="status-dot active"></span> Active</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td><img class="user-avatar" src="https://randomuser.me/api/portraits/men/6.jpg" alt="avatar"> Martin Sommer</td>
-                    <td>04/10/2020</td>
-                    <td>Moderator</td>
-                    <td><span class="status-dot inactive"></span> Inactive</td>
-                    <td>
-                        <span class="action-icon edit" title="Edit"></span>
-                        <span class="action-icon deactivate" title="Deactivate"></span>
-                    </td>
-                </tr>
+                <!-- User rows will be populated by JavaScript -->
             </tbody>
         </table>
     </main>
@@ -196,63 +128,86 @@
     </div>
     <div id="logout-confirmation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
      background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-    <p>Are you sure you want to log out?</p>
-    <button onclick="logout()">Yes</button>
-    <button onclick="hideLogoutConfirmation()">No</button>
-</div>
+        <p>Are you sure you want to log out?</p>
+        <button onclick="logout()">Yes</button>
+        <button onclick="hideLogoutConfirmation()">No</button>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
 </body>
 
-<script src="app.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart', 'bar']});
-  google.charts.setOnLoadCallback(drawCharts);
+    google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+    google.charts.setOnLoadCallback(drawCharts);
 
-  function drawCharts() {
-    // Pie chart
-    var pieData = google.visualization.arrayToDataTable([
-      ['Status', 'Count'],
-      ['Attendance', 80],
-      ['Absent', 10],
-      ['Early Leave', 10]
-    ]);
-    var pieOptions = {
-      title: '',
-      legend: { position: 'bottom', alignment: 'center', textStyle: {fontSize: 12} },
-      pieHole: 0.4,
-      colors: ['#4b3fff', '#ffb347', '#ff5252'],
-      chartArea: {left: 10, top: 10, width: '100%', height: '75%'},
-      fontSize: 13
-    };
-    var pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
-    pieChart.draw(pieData, pieOptions);
+    function drawCharts() {
+        // Pie chart
+        var pieData = google.visualization.arrayToDataTable([
+            ['Status', 'Count'],
+            ['Attendance', 80],
+            ['Absent', 10],
+            ['Early Leave', 10]
+        ]);
+        var pieOptions = {
+            title: '',
+            legend: { position: 'bottom', alignment: 'center', textStyle: { fontSize: 12 } },
+            pieHole: 0.4,
+            colors: ['#4b3fff', '#ffb347', '#ff5252'],
+            chartArea: { left: 10, top: 10, width: '100%', height: '75%' },
+            fontSize: 13
+        };
+        var pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
+        pieChart.draw(pieData, pieOptions);
 
-    // Bar chart (now using ColumnChart for better responsiveness)
-    var barData = google.visualization.arrayToDataTable([
-      ['Subject', "Student's Mark", 'Class Average'],
-      ['Eng', 90, 85],
-      ['Math', 88, 80],
-      ['Sci', 92, 87],
-      ['Hist', 85, 82],
-      ['Geo', 87, 84],
-      ['Bus', 80, 78],
-      ['Art', 95, 90]
-    ]);
-    var barOptions = {
-      legend: { position: 'bottom', alignment: 'center', textStyle: {fontSize: 12} },
-      colors: ['#4b3fff', '#b3b3b3'],
-      vAxis: {format: 'decimal', minValue: 0, maxValue: 100},
-      height: 220,
-      chartArea: {left: 40, top: 20, width: '100%', height: '65%'},
-      bar: { groupWidth: "60%" },
-      fontSize: 13
-    };
-    var barChart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
-    barChart.draw(barData, barOptions);
-  }
+        // Bar chart (now using ColumnChart for better responsiveness)
+        var barData = google.visualization.arrayToDataTable([
+            ['Subject', "Student's Mark", 'Class Average'],
+            ['Eng', 90, 85],
+            ['Math', 88, 80],
+            ['Sci', 92, 87],
+            ['Hist', 85, 82],
+            ['Geo', 87, 84],
+            ['Bus', 80, 78],
+            ['Art', 95, 90]
+        ]);
+        var barOptions = {
+            legend: { position: 'bottom', alignment: 'center', textStyle: { fontSize: 12 } },
+            colors: ['#4b3fff', '#b3b3b3'],
+            vAxis: { format: 'decimal', minValue: 0, maxValue: 100 },
+            height: 220,
+            chartArea: { left: 40, top: 20, width: '100%', height: '65%' },
+            bar: { groupWidth: "60%" },
+            fontSize: 13
+        };
+        var barChart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+        barChart.draw(barData, barOptions);
+    }
 
-  window.addEventListener('resize', drawCharts);
+    window.addEventListener('resize', drawCharts);
 </script>
+
+<!-- Edit User Modal -->
+<div id="edit-user-modal">
+  <div class="modal-content">
+    <h2>Edit User</h2>
+    <label for="edit-user-firstname">First Name</label>
+    <input id="edit-user-firstname" type="text" />
+    <label for="edit-user-lastname">Last Name</label>
+    <input id="edit-user-lastname" type="text" />
+    <label for="edit-user-email">Email</label>
+    <input id="edit-user-email" type="email" />
+    <label for="edit-user-role">Role</label>
+    <select id="edit-user-role">
+      <option value="technician">Technician</option>
+      <option value="landowner">Landowner</option>
+    </select>
+      <button class="modal-btn save">Save</button>
+      <button class="modal-btn cancel">Cancel</button>
+    </div>
+    <input type="hidden" id="edit-user-id" />
+  </div>
+</div>
 
 </html>
