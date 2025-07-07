@@ -23,11 +23,14 @@
 
 
     <nav>
+        <button id="sidebar-back-btn" aria-label="Close sidebar" style="display:none; margin:14px 0 6px 10px; background:none; border:none; color:#ffd600; font-size:1.2em; font-weight:600; cursor:pointer; padding:4px 10px; border-radius:6px;">
+          <span style="font-size:1.3em;vertical-align:middle;">&#8592;</span> <span style="font-size:0.98em;vertical-align:middle;">Back</span>
+        </button>
         <ul>
-            <li><a href="#" onclick="navigateTo('map')">HOME</a></li>
-            <li><a href="#" onclick="navigateTo('home')">REPORTS</a></li>
-            <li><a href="#" onclick="navigateTo('profile')">USER MANAGEMENT</a></li>
-            <li><a href="#" onclick="navigateTo('workspace')">ACTIVITY LOGS</a></li>
+            <li><a href="#" onclick="navigateTo('map'); closeSidebar();">HOME</a></li>
+            <li><a href="#" onclick="navigateTo('home'); closeSidebar();">REPORTS</a></li>
+            <li><a href="#" onclick="navigateTo('profile'); closeSidebar();">USER MANAGEMENT</a></li>
+            <li><a href="#" onclick="navigateTo('workspace'); closeSidebar();">ACTIVITY LOGS</a></li>
         </ul>
     </nav>
     </div>
@@ -260,6 +263,28 @@ function hideLogoutConfirmation() {
   document.getElementById('logout-confirmation').style.display = 'none';
   document.body.classList.remove('blurred');
 }
+
+function closeSidebar() {
+  var nav = document.querySelector('nav');
+  nav.classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var backBtn = document.getElementById('sidebar-back-btn');
+  var nav = document.querySelector('nav');
+  // Show back button only when sidebar is open (mobile)
+  var observer = new MutationObserver(function() {
+    if (nav.classList.contains('open')) {
+      backBtn.style.display = 'block';
+    } else {
+      backBtn.style.display = 'none';
+    }
+  });
+  observer.observe(nav, { attributes: true, attributeFilter: ['class'] });
+  backBtn.addEventListener('click', function() {
+    nav.classList.remove('open');
+  });
+});
 </script>
 
 </html>
