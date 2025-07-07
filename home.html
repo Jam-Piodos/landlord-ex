@@ -59,8 +59,33 @@
     </main>
 
     <main id="map" class="container">
-        <!--Jam: Map ni-->
-
+        <div id="mapid"></div>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('mapid')) {
+                var map = L.map('mapid').setView([10.3157, 123.8854], 13); // Cebu City as example
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                var markers = L.markerClusterGroup();
+                var sampleData = [
+                    {lat: 10.3157, lng: 123.8854, popup: 'Marker 1'},
+                    {lat: 10.3180, lng: 123.9000, popup: 'Marker 2'},
+                    {lat: 10.3100, lng: 123.8800, popup: 'Marker 3'}
+                ];
+                sampleData.forEach(function(item) {
+                    var marker = L.marker([item.lat, item.lng]).bindPopup(item.popup);
+                    markers.addLayer(marker);
+                });
+                map.addLayer(markers);
+            }
+        });
+        </script>
     </main>
 
     <!--Cover area-->

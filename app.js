@@ -144,16 +144,18 @@ async function fetchAndRenderUsers() {
   `).join('');
 }
 
-function navigateTo(page) {
-    // Hide all content sections
-    const contentSections = document.querySelectorAll('main');
-    contentSections.forEach(section => {
+function navigateTo(sectionId) {
+    document.querySelectorAll('.container').forEach(section => {
         section.style.display = 'none';
     });
+    document.getElementById(sectionId).style.display = 'block';
 
-    // Show the selected content section
-    const selectedSection = document.getElementById(page);
-    selectedSection.style.display = 'block';
+    // Set background color based on section
+    if (sectionId === 'map') {
+        document.body.style.background = '#eaeaea'; // or #fff for a neutral background
+    } else {
+        document.body.style.background = 'rgb(255, 78, 0)';
+    }
 }
 
 // Initial navigation to the profile page
