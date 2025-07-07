@@ -6,7 +6,7 @@
     <title> Log in </title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="login-page">
 
     <div class="signup-container">
         <h2>Log in</h2>
@@ -28,7 +28,7 @@
     <script>
         function redirectHome(event) {
             event.preventDefault(); // Prevent actual form submission
-            window.location.href = 'home.html'; // Redirect to home.html
+            window.location.href = 'home.html#map'; // Redirect to home.html and show #map section
         }
     </script>
 

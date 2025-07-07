@@ -299,6 +299,44 @@ function initMap() {
     markers.addLayer(marker);
   });
   map.addLayer(markers);
+  // Draw land areas from the database
+  drawLandAreas(map);
+}
+
+async function drawLandAreas(map) {
+  const { data: landAreas, error } = await supabase
+    .from('land_areas')
+    .select('id, path');
+  if (error) {
+    console.error('Error fetching land areas:', error);
+    return;
+  }
+  landAreas.forEach(area => {
+    let coords = area.path;
+    if (typeof coords === 'string') {
+      try { coords = JSON.parse(coords); } catch { return; }
+    }
+    // Prepare popup content (customize as needed)
+    const popupContent = `
+      <b>Owner:</b> ${area.owner_name || 'N/A'}<br>
+      <b>ID:</b> ${area.id}
+    `;
+    if (
+      coords.length > 2 &&
+      coords[0][0] === coords[coords.length - 1][0] &&
+      coords[0][1] === coords[coords.length - 1][1]
+    ) {
+      // Closed polygon
+      L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
+        .addTo(map)
+        .bindPopup(popupContent);
+    } else {
+      // Polyline
+      L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
+        .addTo(map)
+        .bindPopup(popupContent);
+    }
+  });
 }
 
 async function fetchAndRenderActivityLogs() {
