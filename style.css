@@ -816,3 +816,57 @@ nav a:hover {
     }
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #fff;
+}
+
+#map.container {
+    position: fixed;
+    top: 140px; /* height of your header+nav */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: calc(100vh - 140px);
+    min-height: 400px;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+}
+
+#mapid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: #eaeaea;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    #map.container {
+        top: 100px;
+        height: calc(100vh - 100px);
+        min-height: 250px;
+    }
+    #mapid {
+        min-height: 250px;
+    }
+}
+
