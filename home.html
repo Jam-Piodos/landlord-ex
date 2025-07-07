@@ -19,8 +19,8 @@
 
     <nav>
         <ul>
-            <li><a href="#" onclick="navigateTo('home')">HOME</a></li>
-            <li><a href="#" onclick="navigateTo('map')">MAP</a></li>
+            <li><a href="#" onclick="navigateTo('map')">HOME</a></li>
+            <li><a href="#" onclick="navigateTo('home')">REPORTS</a></li>
             <li><a href="#" onclick="navigateTo('profile')">USER MANAGEMENT</a></li>
             <li><a href="#" onclick="navigateTo('workspace')">ACTIVITY LOGS</a></li>
         </ul>
@@ -30,19 +30,19 @@
     <main id="home" class="container">
         <div class="dashboard-cards">
             <div class="dashboard-card attendance">
-                <div class="card-title"><span class="dot green"></span> Attendance</div>
-                <div class="card-value">98%</div>
+                <div class="card-title"><span class="dot green"></span> Total Users</div>
+                <div class="card-value" id="total-users">...</div>
                 <div class="card-meta">Last attend: 02 March, 2020<br>Reason: Torchbearer</div>
             </div>
             <div class="dashboard-card fee-due">
-                <div class="card-title"><span class="dot yellow"></span> Fee Due <span class="send-notice">Send
+                <div class="card-title"><span class="dot yellow"></span> Total Landowners<span class="send-notice">Send
                         Notice</span></div>
-                <div class="card-value">৳ 12650.00</div>
+                <div class="card-value" id="total-landowners">...</div>
                 <div class="card-meta">Last paid: 02 March, 2020<br>Method: Online</div>
             </div>
             <div class="dashboard-card exam-marks">
-                <div class="card-title"><span class="dot blue"></span> Exam Marks</div>
-                <div class="card-value">92%</div>
+                <div class="card-title"><span class="dot blue"></span> Total Land areas</div>
+                <div class="card-value" id="total-landareas">...</div>
                 <div class="card-meta">Last exam: 1st Semester<br>Top Marks: English (98%)</div>
             </div>
         </div>

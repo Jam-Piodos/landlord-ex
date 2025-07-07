@@ -8,6 +8,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Fetch users from Supabase and populate the user management table
 document.addEventListener('DOMContentLoaded', () => {
   fetchAndRenderUsers();
+  updateDashboardCounts();
   // Event delegation for action buttons
   document.querySelector('#profile .account-table tbody').addEventListener('click', async function(e) {
     // Deactivate/Activate
@@ -159,7 +160,7 @@ function navigateTo(sectionId) {
 }
 
 // Initial navigation to the profile page
-navigateTo('home');
+navigateTo('map');
 
 // Function to accept work and move the post to the Workspace section
 function acceptWork(button) {
@@ -222,4 +223,39 @@ function navigateTo(sectionId) {
         function logout() {
             window.location.href = 'index.html'; // Redirect to login page
         }
+
+async function updateDashboardCounts() {
+  // Total users
+  const { count: userCount } = await supabase
+    .from('users')
+    .select('*', { count: 'exact', head: true });
+
+  // Total land areas
+  const { count: landAreaCount, data: landAreas } = await supabase
+    .from('land_areas')
+    .select('owner_name', { count: 'exact' });
+
+  // Total unique landowners (by owner_name in land_areas)
+  let landownerCount = 0;
+  if (landAreas) {
+    const uniqueOwners = new Set(landAreas.map(area => area.owner_name));
+    landownerCount = uniqueOwners.size;
+  }
+
+  // Update the dashboard
+  const usersElem = document.getElementById('total-users');
+  const ownersElem = document.getElementById('total-landowners');
+  const areasElem = document.getElementById('total-landareas');
+  if (usersElem) usersElem.textContent = userCount ?? '0';
+  if (ownersElem) ownersElem.textContent = landownerCount ?? '0';
+  if (areasElem) areasElem.textContent = landAreaCount ?? '0';
+}
+
+// Call this on DOMContentLoaded
+const origDOMContentLoaded = document.onreadystatechange;
+document.addEventListener('DOMContentLoaded', () => {
+  updateDashboardCounts();
+  if (typeof origDOMContentLoaded === 'function') origDOMContentLoaded();
+  // ... your other code ...
+});
         
