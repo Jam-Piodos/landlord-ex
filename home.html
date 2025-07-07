@@ -11,6 +11,11 @@
 <body>
     <!--top area-->
     <div class="box">
+        <button id="burger-btn" aria-label="Open navigation">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
         <h1>LANDLORD</h1>
         <img id="dp" src="https://tse2.mm.bing.net/th?id=OIP.yYUwl3GDU07Q5J5ttyW9fQHaHa&pid=Api&P=0&h=220"
             alt="User Icon" onclick="showLogoutConfirmation()" style="cursor: pointer;">
@@ -18,11 +23,14 @@
 
 
     <nav>
+        <button id="sidebar-back-btn" aria-label="Close sidebar" style="display:none; margin:14px 0 6px 10px; background:none; border:none; color:#ffd600; font-size:1.2em; font-weight:600; cursor:pointer; padding:4px 10px; border-radius:6px;">
+          <span style="font-size:1.3em;vertical-align:middle;">&#8592;</span> <span style="font-size:0.98em;vertical-align:middle;">Back</span>
+        </button>
         <ul>
-            <li><a href="#" onclick="navigateTo('home')">HOME</a></li>
-            <li><a href="#" onclick="navigateTo('map')">MAP</a></li>
-            <li><a href="#" onclick="navigateTo('profile')">USER MANAGEMENT</a></li>
-            <li><a href="#" onclick="navigateTo('workspace')">ACTIVITY LOGS</a></li>
+            <li><a href="#" onclick="navigateTo('map'); closeSidebar();">HOME</a></li>
+            <li><a href="#" onclick="navigateTo('home'); closeSidebar();">REPORTS</a></li>
+            <li><a href="#" onclick="navigateTo('profile'); closeSidebar();">USER MANAGEMENT</a></li>
+            <li><a href="#" onclick="navigateTo('workspace'); closeSidebar();">ACTIVITY LOGS</a></li>
         </ul>
     </nav>
     </div>
@@ -30,19 +38,18 @@
     <main id="home" class="container">
         <div class="dashboard-cards">
             <div class="dashboard-card attendance">
-                <div class="card-title"><span class="dot green"></span> Attendance</div>
-                <div class="card-value">98%</div>
+                <div class="card-title"><span class="dot green"></span> Total Users</div>
+                <div class="card-value" id="total-users">...</div>
                 <div class="card-meta">Last attend: 02 March, 2020<br>Reason: Torchbearer</div>
             </div>
             <div class="dashboard-card fee-due">
-                <div class="card-title"><span class="dot yellow"></span> Fee Due <span class="send-notice">Send
-                        Notice</span></div>
-                <div class="card-value">৳ 12650.00</div>
+                <div class="card-title"><span class="dot yellow"></span> Total Landowners<span class="send-notice"></span></div>
+                <div class="card-value" id="total-landowners">...</div>
                 <div class="card-meta">Last paid: 02 March, 2020<br>Method: Online</div>
             </div>
             <div class="dashboard-card exam-marks">
-                <div class="card-title"><span class="dot blue"></span> Exam Marks</div>
-                <div class="card-value">92%</div>
+                <div class="card-title"><span class="dot blue"></span> Total Land areas</div>
+                <div class="card-value" id="total-landareas">...</div>
                 <div class="card-meta">Last exam: 1st Semester<br>Top Marks: English (98%)</div>
             </div>
         </div>
@@ -65,39 +72,6 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (document.getElementById('mapid')) {
-                var map = L.map('mapid');
-                // Try to center on user's location
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(pos) {
-                        map.setView([pos.coords.latitude, pos.coords.longitude], 18);
-                    }, function() {
-                        map.setView([10.3157, 123.8854], 13); // fallback
-                    });
-                } else {
-                    map.setView([10.3157, 123.8854], 13);
-                }
-                // Google Satellite tiles (for dev/testing)
-                L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                    attribution: '© Google (for development use only)'
-                }).addTo(map);
-
-                var markers = L.markerClusterGroup();
-                var sampleData = [
-                    {lat: 10.3157, lng: 123.8854, popup: 'Marker 1'},
-                    {lat: 10.3180, lng: 123.9000, popup: 'Marker 2'},
-                    {lat: 10.3100, lng: 123.8800, popup: 'Marker 3'}
-                ];
-                sampleData.forEach(function(item) {
-                    var marker = L.marker([item.lat, item.lng]).bindPopup(item.popup);
-                    markers.addLayer(marker);
-                });
-                map.addLayer(markers);
-            }
-        });
-        </script>
     </main>
 
     <!--Cover area-->
@@ -128,36 +102,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Delete custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>2 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create or update custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>4 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create or update custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>7 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Delete role assignment</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>22 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create role assignment</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>24 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
+                <!-- Activity log rows will be populated by JavaScript -->
             </tbody>
         </table>
     </main>
@@ -228,6 +173,7 @@
 <!-- Edit User Modal -->
 <div id="edit-user-modal">
   <div class="modal-content">
+    <button id="close-edit-modal" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.5em;cursor:pointer;">&times;</button>
     <h2>Edit User</h2>
     <label for="edit-user-firstname">First Name</label>
     <input id="edit-user-firstname" type="text" />
@@ -242,9 +188,69 @@
     </select>
       <button class="modal-btn save">Save</button>
       <button class="modal-btn cancel">Cancel</button>
-    </div>
     <input type="hidden" id="edit-user-id" />
   </div>
 </div>
+
+<script>
+// Show/hide sidebar on burger click
+document.addEventListener('DOMContentLoaded', function() {
+  var burger = document.getElementById('burger-btn');
+  var nav = document.querySelector('nav');
+  burger.addEventListener('click', function(e) {
+    nav.classList.toggle('open');
+    e.stopPropagation();
+  });
+  // Hide sidebar if window resized out of map
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 900) nav.classList.remove('open');
+  });
+  // Close sidebar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (nav.classList.contains('open') && !nav.contains(e.target) && e.target !== burger) {
+      nav.classList.remove('open');
+    }
+  });
+  // Always update dashboard counts when navigating to REPORTS
+  var origNav = window.navigateTo;
+  window.navigateTo = function(sectionId) {
+    if (origNav) origNav(sectionId);
+    if (sectionId === 'home') {
+      if (typeof updateDashboardCounts === 'function') updateDashboardCounts();
+    }
+  };
+});
+// Blur background when logout modal is shown
+function showLogoutConfirmation() {
+  document.getElementById('logout-confirmation').style.display = 'block';
+  document.body.classList.add('blurred');
+}
+function hideLogoutConfirmation() {
+  document.getElementById('logout-confirmation').style.display = 'none';
+  document.body.classList.remove('blurred');
+}
+
+function closeSidebar() {
+  var nav = document.querySelector('nav');
+  nav.classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var backBtn = document.getElementById('sidebar-back-btn');
+  var nav = document.querySelector('nav');
+  // Show back button only when sidebar is open (mobile)
+  var observer = new MutationObserver(function() {
+    if (nav.classList.contains('open')) {
+      backBtn.style.display = 'block';
+    } else {
+      backBtn.style.display = 'none';
+    }
+  });
+  observer.observe(nav, { attributes: true, attributeFilter: ['class'] });
+  backBtn.addEventListener('click', function() {
+    nav.classList.remove('open');
+  });
+});
+</script>
 
 </html>

@@ -8,6 +8,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Fetch users from Supabase and populate the user management table
 document.addEventListener('DOMContentLoaded', () => {
   fetchAndRenderUsers();
+  updateDashboardCounts();
   // Event delegation for action buttons
   document.querySelector('#profile .account-table tbody').addEventListener('click', async function(e) {
     // Deactivate/Activate
@@ -159,7 +160,7 @@ function navigateTo(sectionId) {
 }
 
 // Initial navigation to the profile page
-navigateTo('home');
+navigateTo('map');
 
 // Function to accept work and move the post to the Workspace section
 function acceptWork(button) {
@@ -222,4 +223,132 @@ function navigateTo(sectionId) {
         function logout() {
             window.location.href = 'index.html'; // Redirect to login page
         }
+
+async function updateDashboardCounts() {
+  // Total users
+  const { count: userCount } = await supabase
+    .from('users')
+    .select('*', { count: 'exact', head: true });
+
+  // Total land areas
+  const { count: landAreaCount, data: landAreas } = await supabase
+    .from('land_areas')
+    .select('owner_name', { count: 'exact' });
+
+  // Total unique landowners (by owner_name in land_areas)
+  let landownerCount = 0;
+  if (landAreas) {
+    const uniqueOwners = new Set(landAreas.map(area => area.owner_name));
+    landownerCount = uniqueOwners.size;
+  }
+
+  // Update the dashboard
+  const usersElem = document.getElementById('total-users');
+  const ownersElem = document.getElementById('total-landowners');
+  const areasElem = document.getElementById('total-landareas');
+  if (usersElem) usersElem.textContent = userCount ?? '0';
+  if (ownersElem) ownersElem.textContent = landownerCount ?? '0';
+  if (areasElem) areasElem.textContent = landAreaCount ?? '0';
+}
+
+// Call this on DOMContentLoaded
+const origDOMContentLoaded = document.onreadystatechange;
+document.addEventListener('DOMContentLoaded', () => {
+  updateDashboardCounts();
+  if (typeof origDOMContentLoaded === 'function') origDOMContentLoaded();
+  // ... your other code ...
+});
+
+let leafletMap = null;
+
+function initMap() {
+  const mapContainer = document.getElementById('mapid');
+  if (!mapContainer) return;
+
+  // Properly destroy any previous map instance
+  if (window.leafletMap) {
+    window.leafletMap.remove();
+    window.leafletMap = null;
+  }
+  mapContainer.innerHTML = '';
+
+  var map = L.map('mapid');
+  window.leafletMap = map;
+
+  // Try to center on user's location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      map.setView([pos.coords.latitude, pos.coords.longitude], 18);
+    }, function() {
+      map.setView([10.3157, 123.8854], 13); // fallback
+    });
+  } else {
+    map.setView([10.3157, 123.8854], 13);
+  }
+  L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    attribution: '© Google (for development use only)'
+  }).addTo(map);
+  var markers = L.markerClusterGroup();
+  var sampleData = [
+    {lat: 10.3157, lng: 123.8854, popup: 'Marker 1'},
+    {lat: 10.3180, lng: 123.9000, popup: 'Marker 2'},
+    {lat: 10.3100, lng: 123.8800, popup: 'Marker 3'}
+  ];
+  sampleData.forEach(function(item) {
+    var marker = L.marker([item.lat, item.lng]).bindPopup(item.popup);
+    markers.addLayer(marker);
+  });
+  map.addLayer(markers);
+}
+
+async function fetchAndRenderActivityLogs() {
+  const tableBody = document.querySelector('#workspace .activity-log-table tbody');
+  if (!tableBody) return;
+  tableBody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+  const { data: logs, error } = await supabase
+    .from('activity_logs')
+    .select('*')
+    .order('timestamp', { ascending: false });
+  if (error) {
+    tableBody.innerHTML = `<tr><td colspan="4">Error loading logs.</td></tr>`;
+    return;
+  }
+  if (!logs || logs.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="4">No logs found.</td></tr>`;
+    return;
+  }
+  tableBody.innerHTML = logs.map(log => `
+    <tr>
+      <td>${log.operation_name || ''}</td>
+      <td><span class="log-status succeeded">${log.status || ''}</span></td>
+      <td>${log.time || ''}</td>
+      <td>${log.timestamp || ''}</td>
+    </tr>
+  `).join('');
+}
+
+// Patch navigation to update data and map
+var origNav = window.navigateTo;
+window.navigateTo = function(sectionId) {
+  if (origNav) origNav(sectionId);
+  if (sectionId === 'home') {
+    if (typeof updateDashboardCounts === 'function') updateDashboardCounts();
+  }
+  if (sectionId === 'profile') {
+    if (typeof fetchAndRenderUsers === 'function') fetchAndRenderUsers();
+  }
+  if (sectionId === 'workspace') {
+    if (typeof fetchAndRenderActivityLogs === 'function') fetchAndRenderActivityLogs();
+  }
+  if (sectionId === 'map') {
+    // Force reflow to ensure #mapid is visible
+    const mapMain = document.getElementById('map');
+    mapMain.style.display = 'block';
+    // Force reflow
+    void mapMain.offsetWidth;
+    requestAnimationFrame(() => {
+      initMap();
+    });
+  }
+};
         
