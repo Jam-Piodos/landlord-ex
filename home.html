@@ -11,6 +11,11 @@
 <body>
     <!--top area-->
     <div class="box">
+        <button id="burger-btn" aria-label="Open navigation">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
         <h1>LANDLORD</h1>
         <img id="dp" src="https://tse2.mm.bing.net/th?id=OIP.yYUwl3GDU07Q5J5ttyW9fQHaHa&pid=Api&P=0&h=220"
             alt="User Icon" onclick="showLogoutConfirmation()" style="cursor: pointer;">
@@ -128,36 +133,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Delete custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>2 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create or update custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>4 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create or update custom role definition</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>7 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Delete role assignment</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>22 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
-                <tr>
-                    <td>Create role assignment</td>
-                    <td><span class="log-status succeeded">Succeeded</span></td>
-                    <td>24 minutes ago</td>
-                    <td>Mon Mar 01</td>
-                </tr>
+                <!-- Activity log rows will be populated by JavaScript -->
             </tbody>
         </table>
     </main>
@@ -228,6 +204,7 @@
 <!-- Edit User Modal -->
 <div id="edit-user-modal">
   <div class="modal-content">
+    <button id="close-edit-modal" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.5em;cursor:pointer;">&times;</button>
     <h2>Edit User</h2>
     <label for="edit-user-firstname">First Name</label>
     <input id="edit-user-firstname" type="text" />
@@ -242,9 +219,47 @@
     </select>
       <button class="modal-btn save">Save</button>
       <button class="modal-btn cancel">Cancel</button>
-    </div>
     <input type="hidden" id="edit-user-id" />
   </div>
 </div>
+
+<script>
+// Show/hide sidebar on burger click
+document.addEventListener('DOMContentLoaded', function() {
+  var burger = document.getElementById('burger-btn');
+  var nav = document.querySelector('nav');
+  burger.addEventListener('click', function(e) {
+    nav.classList.toggle('open');
+    e.stopPropagation();
+  });
+  // Hide sidebar if window resized out of map
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 900) nav.classList.remove('open');
+  });
+  // Close sidebar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (nav.classList.contains('open') && !nav.contains(e.target) && e.target !== burger) {
+      nav.classList.remove('open');
+    }
+  });
+  // Always update dashboard counts when navigating to REPORTS
+  var origNav = window.navigateTo;
+  window.navigateTo = function(sectionId) {
+    if (origNav) origNav(sectionId);
+    if (sectionId === 'home') {
+      if (typeof updateDashboardCounts === 'function') updateDashboardCounts();
+    }
+  };
+});
+// Blur background when logout modal is shown
+function showLogoutConfirmation() {
+  document.getElementById('logout-confirmation').style.display = 'block';
+  document.body.classList.add('blurred');
+}
+function hideLogoutConfirmation() {
+  document.getElementById('logout-confirmation').style.display = 'none';
+  document.body.classList.remove('blurred');
+}
+</script>
 
 </html>

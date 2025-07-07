@@ -17,20 +17,20 @@ nav {
     position: fixed;
     left: 0;
     top: 0;
-    width: 64px;
+    width: 220px;
     height: 100vh;
     background: rgba(35, 39, 47, 0.95);
     display: flex;
     flex-direction: column;
-    z-index: 1000;
+    z-index: 3001;
     box-shadow: 2px 0 16px rgba(0,0,0,0.25);
-    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
-    overflow-x: hidden;
     border-right: 1.5px solid #23272f;
     backdrop-filter: blur(6px);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
-nav:hover, nav:focus-within {
-    width: 220px;
+nav.open {
+    transform: translateX(0);
 }
 nav ul {
     list-style: none;
@@ -84,6 +84,7 @@ nav a:hover, nav a.active {
     border-bottom: 1.5px solid #23272f;
     box-shadow: 0 2px 16px rgba(0,0,0,0.18);
     backdrop-filter: blur(8px);
+    gap: 18px;
 }
 .box h1 {
     font-size: 1.5em;
@@ -106,7 +107,7 @@ nav a:hover, nav a.active {
 
 /* ====== MAIN CONTAINER ====== */
 .container {
-    margin-left: 64px;
+    margin-left: 0 !important;
     padding: 100px 32px 32px 32px;
     min-height: 100vh;
     background: transparent;
@@ -124,7 +125,9 @@ nav:hover ~ .container, nav:focus-within ~ .container {
     flex-wrap: wrap;
 }
 .dashboard-card {
-    background: rgba(35, 39, 47, 0.92);
+    background: #23272f !important;
+    color: #fff !important;
+    border: 1.5px solid #292b32;
     border-radius: 16px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     padding: 28px 36px 20px 28px;
@@ -134,33 +137,32 @@ nav:hover ~ .container, nav:focus-within ~ .container {
     flex-direction: column;
     justify-content: center;
     position: relative;
-    color: #e4e6eb;
-    border: 1.5px solid #23272f;
-    transition: box-shadow 0.2s, border 0.2s;
 }
 .dashboard-card:hover {
     box-shadow: 0 8px 32px #ffd60044;
     border: 1.5px solid #ffd600;
 }
 .dashboard-card .card-title {
+    color: #ffd600 !important;
+    text-shadow: 0 1px 4px #000a;
     font-size: 1.1em;
     font-weight: 600;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #ffd600;
 }
 .dashboard-card .card-value {
+    color: #fff !important;
+    text-shadow: 0 2px 8px #000a;
     font-size: 2.3em;
     font-weight: bold;
     margin-bottom: 6px;
-    color: #4b3fff;
-    text-shadow: 0 2px 8px #0004;
 }
 .dashboard-card .card-meta {
+    color: #bdbdbd !important;
+    text-shadow: 0 1px 2px #0008;
     font-size: 0.98em;
-    color: #bdbdbd;
 }
 .card-meta-up {
     color: #00e676;
@@ -196,7 +198,9 @@ nav:hover ~ .container, nav:focus-within ~ .container {
     margin-bottom: 32px;
 }
 .chart-section, .dashboard-chart-card {
-    background: rgba(35, 39, 47, 0.92);
+    background: #23272f !important;
+    color: #fff !important;
+    border: 1.5px solid #292b32;
     border-radius: 16px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.14);
     padding: 22px 16px 12px 16px;
@@ -204,14 +208,13 @@ nav:hover ~ .container, nav:focus-within ~ .container {
     min-width: 350px;
     box-sizing: border-box;
     overflow-x: auto;
-    color: #e4e6eb;
-    border: 1.5px solid #23272f;
 }
-.chart-title, .chart-section h3 {
+.chart-section h3, .chart-title {
+    color: #ffd600 !important;
+    text-shadow: 0 1px 4px #000a;
     font-size: 1.1em;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #ffd600;
 }
 
 /* ====== TABLES ====== */
@@ -926,7 +929,9 @@ textarea{
     justify-content: space-between;
 }
 .dashboard-card {
-    background: #fff;
+    background: #23272f !important;
+    color: #fff !important;
+    border: 1.5px solid #292b32;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     padding: 24px 32px 18px 24px;
@@ -938,6 +943,8 @@ textarea{
     position: relative;
 }
 .dashboard-card .card-title {
+    color: #ffd600 !important;
+    text-shadow: 0 1px 4px #000a;
     font-size: 1.1em;
     font-weight: 600;
     margin-bottom: 8px;
@@ -946,14 +953,16 @@ textarea{
     gap: 8px;
 }
 .dashboard-card .card-value {
+    color: #fff !important;
+    text-shadow: 0 2px 8px #000a;
     font-size: 2.2em;
     font-weight: bold;
     margin-bottom: 6px;
-    color: #4b3fff;
 }
 .dashboard-card .card-meta {
+    color: #bdbdbd !important;
+    text-shadow: 0 1px 2px #0008;
     font-size: 0.95em;
-    color: #888;
 }
 .dashboard-card.fee-due .card-value {
     color: #ffb347;
@@ -985,7 +994,9 @@ textarea{
     justify-content: space-between;
 }
 .chart-section {
-    background: #fff;
+    background: #23272f !important;
+    color: #fff !important;
+    border: 1.5px solid #292b32;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     padding: 18px 12px 8px 12px;
@@ -995,10 +1006,11 @@ textarea{
     overflow-x: auto;
 }
 .chart-section h3 {
+    color: #ffd600 !important;
+    text-shadow: 0 1px 4px #000a;
     font-size: 1.1em;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #333;
 }
 
 #home {
@@ -1067,6 +1079,8 @@ textarea{
     box-sizing: border-box;
     margin: 0 auto;
     display: block;
+    background: #23272f !important;
+    color: #fff !important;
 }
 
 .action-btn {
@@ -1276,5 +1290,64 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Burger button style (dot + bar) */
+#burger-btn {
+    margin-right: 12px;
+    width: 44px;
+    height: 44px;
+    background: rgba(35,39,47,0.85);
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+#burger-btn .burger-line {
+    width: 26px;
+    height: 4px;
+    background: #18191a;
+    border-radius: 2px;
+    margin: 0;
+    box-shadow: 0 1px 2px #0002;
+    transition: background 0.2s;
+}
+#burger-btn:hover {
+    background: rgba(41,43,50,0.95);
+    box-shadow: 0 4px 16px #ffd60044;
+}
+#burger-btn:active .burger-line {
+    background: #ffd600;
+}
+
+/* Blur effect for modal */
+body.blurred > *:not(#logout-confirmation) {
+    filter: blur(6px) brightness(0.8);
+    pointer-events: none;
+    user-select: none;
+}
+#logout-confirmation {
+    filter: none !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+}
+
+/* Remove unused overlay/burger styles */
+#burger-overlay-btn, #sidebar-overlay { display: none !important; }
+
+/* Hide nav on all screens unless open */
+@media (min-width: 0px) {
+    nav {
+        transform: translateX(-100%);
+    }
+    nav.open {
+        transform: translateX(0);
+    }
 }
 
