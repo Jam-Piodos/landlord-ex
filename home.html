@@ -251,6 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
     nav.classList.remove('open');
   });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Hash-based navigation: show the correct section if hash is present
+  var hash = window.location.hash.replace('#', '');
+  if (hash && document.getElementById(hash)) {
+    if (typeof navigateTo === 'function') navigateTo(hash);
+  }
+});
 </script>
 
 </html>
