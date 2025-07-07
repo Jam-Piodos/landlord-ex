@@ -259,15 +259,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // ... your other code ...
 });
 
+let leafletMap = null;
+
 function initMap() {
   const mapContainer = document.getElementById('mapid');
   if (!mapContainer) return;
-  // Remove any previous map instance
-  if (mapContainer._leaflet_id) {
-    mapContainer._leaflet_id = null;
-    mapContainer.innerHTML = '';
+
+  // Properly destroy any previous map instance
+  if (window.leafletMap) {
+    window.leafletMap.remove();
+    window.leafletMap = null;
   }
+  mapContainer.innerHTML = '';
+
   var map = L.map('mapid');
+  window.leafletMap = map;
+
   // Try to center on user's location
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -334,7 +341,14 @@ window.navigateTo = function(sectionId) {
     if (typeof fetchAndRenderActivityLogs === 'function') fetchAndRenderActivityLogs();
   }
   if (sectionId === 'map') {
-    setTimeout(initMap, 100); // Ensure DOM is ready
+    // Force reflow to ensure #mapid is visible
+    const mapMain = document.getElementById('map');
+    mapMain.style.display = 'block';
+    // Force reflow
+    void mapMain.offsetWidth;
+    requestAnimationFrame(() => {
+      initMap();
+    });
   }
 };
         
