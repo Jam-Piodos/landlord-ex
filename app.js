@@ -346,13 +346,69 @@ async function drawLandAreas(map) {
       coords[0][0] === coords[coords.length - 1][0] &&
       coords[0][1] === coords[coords.length - 1][1]
     ) {
-      L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
+      const polygon = L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
         .addTo(map)
         .bindPopup(popupContent);
+      // Optionally, add arrows along the lines using PolylineDecorator if available
+      if (window.L && L.polylineDecorator) {
+        L.polylineDecorator(polygon, {
+          patterns: [
+            { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 16, polygon: false, pathOptions: { stroke: true, color: 'orange' } }) }
+          ]
+        }).addTo(map);
+      }
+      // Add dot points at each corner with distance popup
+      coords.forEach((pt, idx) => {
+        const nextIdx = (idx + 1) % coords.length;
+        const nextPt = coords[nextIdx];
+        const marker = L.circleMarker(pt, {
+          radius: 7,
+          color: '#fff',
+          fillColor: '#fff',
+          fillOpacity: 0.98,
+          weight: 2,
+          opacity: 1
+        }).addTo(map);
+        marker.on('click', function(e) {
+          let dist = 0;
+          if (map && nextPt) {
+            dist = map.distance(pt, nextPt);
+          }
+          marker.bindPopup(`Distance to next: ${dist.toFixed(2)} meters`).openPopup();
+        });
+      });
     } else {
-      L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
+      const polyline = L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
         .addTo(map)
         .bindPopup(popupContent);
+      // Optionally, add arrows along the lines using PolylineDecorator if available
+      if (window.L && L.polylineDecorator) {
+        L.polylineDecorator(polyline, {
+          patterns: [
+            { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 16, polygon: false, pathOptions: { stroke: true, color: 'orange' } }) }
+          ]
+        }).addTo(map);
+      }
+      // Add dot points at each vertex with distance popup
+      coords.forEach((pt, idx) => {
+        const nextIdx = (idx + 1) % coords.length;
+        const nextPt = coords[nextIdx];
+        const marker = L.circleMarker(pt, {
+          radius: 7,
+          color: '#fff',
+          fillColor: '#fff',
+          fillOpacity: 0.98,
+          weight: 2,
+          opacity: 1
+        }).addTo(map);
+        marker.on('click', function(e) {
+          let dist = 0;
+          if (map && nextPt) {
+            dist = map.distance(pt, nextPt);
+          }
+          marker.bindPopup(`Distance to next: ${dist.toFixed(2)} meters`).openPopup();
+        });
+      });
     }
   });
 }
