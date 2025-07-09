@@ -349,6 +349,10 @@ async function drawLandAreas(map) {
       const polygon = L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
         .addTo(map)
         .bindPopup(popupContent);
+      // Add click handler for owner profile popup
+      polygon.on('click', function(e) {
+        showOwnerProfilePopup(area, coords, map, e && e.latlng);
+      });
       // Optionally, add arrows along the lines using PolylineDecorator if available
       if (window.L && L.polylineDecorator) {
         L.polylineDecorator(polygon, {
@@ -381,6 +385,10 @@ async function drawLandAreas(map) {
       const polyline = L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
         .addTo(map)
         .bindPopup(popupContent);
+      // Add click handler for owner profile popup
+      polyline.on('click', function(e) {
+        showOwnerProfilePopup(area, coords, map, e && e.latlng);
+      });
       // Optionally, add arrows along the lines using PolylineDecorator if available
       if (window.L && L.polylineDecorator) {
         L.polylineDecorator(polyline, {
@@ -548,6 +556,27 @@ async function fetchAndRenderLandAreas() {
       // Highlight selected
       document.querySelectorAll('.landarea-list li').forEach(el => el.classList.remove('active'));
       li.classList.add('active');
+
+      // Show owner profile popup after zoom
+      setTimeout(() => {
+        // Try to get the map instance
+        const map = window.leafletMap;
+        let coords = area.path;
+        if (typeof coords === 'string') {
+          try { coords = JSON.parse(coords); } catch {}
+        }
+        // Use centroid or first coordinate for popup location
+        let popupLatLng = null;
+        if (coords && coords.length > 0) {
+          // Simple centroid: average of all points
+          let latSum = 0, lngSum = 0;
+          coords.forEach(pt => { latSum += pt[0]; lngSum += pt[1]; });
+          popupLatLng = L.latLng(latSum / coords.length, lngSum / coords.length);
+        }
+        if (typeof showOwnerProfilePopup === 'function') {
+          showOwnerProfilePopup(area, coords, map, popupLatLng);
+        }
+      }, 400); // Wait for zoom animation
     };
     list.appendChild(li);
   });
@@ -571,3 +600,78 @@ window.navigateTo = (function(origNav) {
     if (sectionId === 'map') fetchAndRenderLandAreas();
   };
 })(window.navigateTo);        
+
+// Helper function to show owner profile popup
+async function showOwnerProfilePopup(area, coords, map, latlng) {
+  const ownerName = area.owner_name;
+  let ownerDetails = null;
+  let addedBy = 'N/A';
+  let userIdToUse = null;
+  try {
+    const { data, error } = await supabase
+      .from('owners')
+      .select('*')
+      .ilike('name', ownerName)
+      .single();
+    if (!error && data) ownerDetails = data;
+  } catch {}
+
+  // Use ownerDetails.user_id if present, else area.user_id
+  userIdToUse = ownerDetails?.user_id || area.user_id;
+  try {
+    if (userIdToUse) {
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('user_firstname, user_lastname, user_email')
+        .eq('user_id', userIdToUse)
+        .single();
+      if (!userError && userData) {
+        addedBy = userData.user_firstname || '';
+        if (userData.user_lastname) addedBy += ' ' + userData.user_lastname;
+        if (!addedBy.trim()) addedBy = userData.user_email || userIdToUse;
+      }
+    }
+  } catch {}
+
+  // Fallback: If latlng is missing, use the first coordinate
+  let popupLatLng = latlng;
+  if (!popupLatLng && coords && coords.length > 0) {
+    popupLatLng = L.latLng(coords[0][0], coords[0][1]);
+  }
+
+  // Use area fields as fallback if ownerDetails is missing
+  let landReference = ownerDetails?.land_reference || area.id;
+  let landSize = ownerDetails?.land_size || 'N/A';
+  let landSizeUnit = ownerDetails?.land_size_unit || '';
+  let landType = ownerDetails?.land_type || 'N/A';
+  let propertyElevation = ownerDetails?.property_elevation || '';
+  let barangay = ownerDetails?.barangay || 'N/A';
+  let numOwnedLots = ownerDetails?.num_owned_lots || 'N/A';
+  let taxStatus = ownerDetails?.tax_status || 'N/A';
+  let developmentStatus = ownerDetails?.development_status || 'N/A';
+
+  let cardHtml = `<div class='owner-profile-card' style='min-width:260px;max-width:320px;padding:18px 16px 12px 16px;border-radius:16px;background:#fff;box-shadow:0 4px 24px #0002;'>`;
+  cardHtml += `<div style='font-size:1.2em;font-weight:700;margin-bottom:6px;'>${ownerName}</div>`;
+  cardHtml += `<div style='font-size:0.98em;margin-bottom:8px;color:#888;'>Land Ref: <b>${landReference}</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'><span style='color:#888;'>Added by:</span> <b>${addedBy}</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'>Land Size: <b>${landSize} ${landSizeUnit}</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'>Land Type: <b>${landType}</b></div>`;
+  if (propertyElevation) cardHtml += `<div style='margin-bottom:6px;'>Elevation: <b>${propertyElevation} m</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'>Barangay: <b>${barangay}</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'>Owned Lots: <b>${numOwnedLots}</b></div>`;
+  cardHtml += `<div style='margin-bottom:6px;'>Tax Status: <b>${taxStatus}</b></div>`;
+  cardHtml += `<div style='margin-bottom:10px;'>Development: <b>${developmentStatus}</b></div>`;
+  cardHtml += `<div style='display:flex;gap:8px;margin-top:10px;'>
+    <button class='profile-action-btn' style='background:#4caf50;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;'>Transfer</button>
+    <button class='profile-action-btn' style='background:#1976d2;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;'>Improve</button>
+    <button class='profile-action-btn' style='background:#ffd600;color:#23272f;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;'>View Documents</button>
+  </div>`;
+  cardHtml += `</div>`;
+
+  if (popupLatLng) {
+    L.popup({ maxWidth: 340, closeButton: true })
+      .setLatLng(popupLatLng)
+      .setContent(cardHtml)
+      .openOn(map);
+  }
+}        
