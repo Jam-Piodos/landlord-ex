@@ -76,25 +76,23 @@
 
     <!--Cover area-->
     <main id="profile" class="container">
-        <div style="display: flex; align-items: flex-start; gap: 24px;">
-            <div style="min-width: 180px;">
-                <button id="add-technician-btn" class="modal-btn save" style="width: 100%; margin-bottom: 18px;">+ Add Technician</button>
+        <div style="display: flex; flex-direction: column; align-items: stretch;">
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px;">
+                <button id="add-technician-btn" class="modal-btn save add-tech-btn"><span class="add-tech-icon">+</span></button>
             </div>
-            <div style="flex: 1;">
-                <table class="account-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- User rows will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+            <table class="account-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User rows will be populated by JavaScript -->
+                </tbody>
+            </table>
         </div>
     </main>
 
