@@ -389,4 +389,59 @@ window.navigateTo = function(sectionId) {
     });
   }
 };
-        
+
+// Add Technician Modal logic
+function showAddTechnicianModal() {
+  document.getElementById('add-technician-modal').classList.add('active');
+}
+function hideAddTechnicianModal() {
+  document.getElementById('add-technician-modal').classList.remove('active');
+  document.getElementById('add-tech-firstname').value = '';
+  document.getElementById('add-tech-lastname').value = '';
+  document.getElementById('add-tech-email').value = '';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var addBtn = document.getElementById('add-technician-btn');
+  if (addBtn) {
+    addBtn.onclick = showAddTechnicianModal;
+  }
+  var closeBtn = document.getElementById('close-add-technician-modal');
+  if (closeBtn) {
+    closeBtn.onclick = hideAddTechnicianModal;
+  }
+  var cancelBtn = document.getElementById('cancel-add-technician');
+  if (cancelBtn) {
+    cancelBtn.onclick = hideAddTechnicianModal;
+  }
+  var saveBtn = document.getElementById('save-add-technician');
+  if (saveBtn) {
+    saveBtn.onclick = async function() {
+      const firstname = document.getElementById('add-tech-firstname').value.trim();
+      const lastname = document.getElementById('add-tech-lastname').value.trim();
+      const email = document.getElementById('add-tech-email').value.trim();
+      if (!firstname || !lastname || !email) {
+        alert('Please fill in all fields.');
+        return;
+      }
+      // Username is the part before the @ in email
+      const username = email.split('@')[0];
+      const user_password = 'landlord';
+      const { error } = await supabase.from('users').insert([
+        {
+          username,
+          user_email: email,
+          user_firstname: firstname,
+          user_lastname: lastname,
+          user_password,
+          role: 'technician'
+        }
+      ]);
+      if (error) {
+        alert('Failed to add technician: ' + error.message);
+        return;
+      }
+      hideAddTechnicianModal();
+      fetchAndRenderUsers();
+    };
+  }
+});        
