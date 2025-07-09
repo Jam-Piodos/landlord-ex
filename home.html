@@ -76,19 +76,24 @@
 
     <!--Cover area-->
     <main id="profile" class="container">
-        <table class="account-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- User rows will be populated by JavaScript -->
-            </tbody>
-        </table>
+        <div style="display: flex; flex-direction: column; align-items: stretch;">
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px;">
+                <button id="add-technician-btn" class="modal-btn save add-tech-btn"><span class="add-tech-icon">+</span></button>
+            </div>
+            <table class="account-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <main id="workspace" class="container section" style="display: none;">
@@ -181,14 +186,26 @@
     <input id="edit-user-lastname" type="text" />
     <label for="edit-user-email">Email</label>
     <input id="edit-user-email" type="email" />
-    <label for="edit-user-role">Role</label>
-    <select id="edit-user-role">
-      <option value="technician">Technician</option>
-      <option value="landowner">Landowner</option>
-    </select>
-      <button class="modal-btn save">Save</button>
-      <button class="modal-btn cancel">Cancel</button>
+    <!-- Remove Role label and select input from Edit User modal -->
+    <button class="modal-btn save">Save</button>
+    <button class="modal-btn cancel">Cancel</button>
     <input type="hidden" id="edit-user-id" />
+  </div>
+</div>
+
+<!-- Add Technician Modal -->
+<div id="add-technician-modal">
+  <div class="modal-content">
+    <button id="close-add-technician-modal" class="modal-close-btn">&times;</button>
+    <h2 class="modal-title">Add Technician</h2>
+    <label for="add-tech-firstname">First Name</label>
+    <input id="add-tech-firstname" type="text" class="modal-input" />
+    <label for="add-tech-lastname">Last Name</label>
+    <input id="add-tech-lastname" type="text" class="modal-input" />
+    <label for="add-tech-email">Email</label>
+    <input id="add-tech-email" type="email" class="modal-input" />
+    <button class="modal-btn save add-tech-save-btn" id="save-add-technician">Add</button>
+    <button class="modal-btn cancel add-tech-cancel-btn" id="cancel-add-technician">Cancel</button>
   </div>
 </div>
 

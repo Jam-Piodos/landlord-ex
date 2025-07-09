@@ -60,18 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const user_id = modal.querySelector('#edit-user-id').value;
       const user_firstname = modal.querySelector('#edit-user-firstname').value;
       const user_lastname = modal.querySelector('#edit-user-lastname').value;
-      const user_role = modal.querySelector('#edit-user-role').value;
       const user_email = modal.querySelector('#edit-user-email').value;
-      // Optionally, add active status if you want to edit it in the modal
-      // const active = modal.querySelector('#edit-user-active').checked;
       const { error } = await supabase
         .from('users')
         .update({
           user_firstname,
           user_lastname,
-          role: user_role,
           user_email
-          // , active
         })
         .eq('user_id', user_id);
       if (error) {
@@ -306,7 +301,7 @@ function initMap() {
 async function drawLandAreas(map) {
   const { data: landAreas, error } = await supabase
     .from('land_areas')
-    .select('id, path');
+    .select('id, owner_name, path, created_at');
   if (error) {
     console.error('Error fetching land areas:', error);
     return;
@@ -316,22 +311,22 @@ async function drawLandAreas(map) {
     if (typeof coords === 'string') {
       try { coords = JSON.parse(coords); } catch { return; }
     }
-    // Prepare popup content (customize as needed)
+    // Debug: See what fields are present
+    console.log(area);
     const popupContent = `
-      <b>Owner:</b> ${area.owner_name || 'N/A'}<br>
-      <b>ID:</b> ${area.id}
+      <b>Owner:</b> ${area.owner_name}<br>
+      <b>ID:</b> ${area.id}<br>
+      <b>Created:</b> ${area.created_at}
     `;
     if (
       coords.length > 2 &&
       coords[0][0] === coords[coords.length - 1][0] &&
       coords[0][1] === coords[coords.length - 1][1]
     ) {
-      // Closed polygon
       L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
         .addTo(map)
         .bindPopup(popupContent);
     } else {
-      // Polyline
       L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
         .addTo(map)
         .bindPopup(popupContent);
@@ -389,4 +384,59 @@ window.navigateTo = function(sectionId) {
     });
   }
 };
-        
+
+// Add Technician Modal logic
+function showAddTechnicianModal() {
+  document.getElementById('add-technician-modal').classList.add('active');
+}
+function hideAddTechnicianModal() {
+  document.getElementById('add-technician-modal').classList.remove('active');
+  document.getElementById('add-tech-firstname').value = '';
+  document.getElementById('add-tech-lastname').value = '';
+  document.getElementById('add-tech-email').value = '';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var addBtn = document.getElementById('add-technician-btn');
+  if (addBtn) {
+    addBtn.onclick = showAddTechnicianModal;
+  }
+  var closeBtn = document.getElementById('close-add-technician-modal');
+  if (closeBtn) {
+    closeBtn.onclick = hideAddTechnicianModal;
+  }
+  var cancelBtn = document.getElementById('cancel-add-technician');
+  if (cancelBtn) {
+    cancelBtn.onclick = hideAddTechnicianModal;
+  }
+  var saveBtn = document.getElementById('save-add-technician');
+  if (saveBtn) {
+    saveBtn.onclick = async function() {
+      const firstname = document.getElementById('add-tech-firstname').value.trim();
+      const lastname = document.getElementById('add-tech-lastname').value.trim();
+      const email = document.getElementById('add-tech-email').value.trim();
+      if (!firstname || !lastname || !email) {
+        alert('Please fill in all fields.');
+        return;
+      }
+      // Username is the part before the @ in email
+      const username = email.split('@')[0];
+      const user_password = 'landlord';
+      const { error } = await supabase.from('users').insert([
+        {
+          username,
+          user_email: email,
+          user_firstname: firstname,
+          user_lastname: lastname,
+          user_password,
+          role: 'technician'
+        }
+      ]);
+      if (error) {
+        alert('Failed to add technician: ' + error.message);
+        return;
+      }
+      hideAddTechnicianModal();
+      fetchAndRenderUsers();
+    };
+  }
+});        
