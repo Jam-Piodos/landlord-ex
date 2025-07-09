@@ -306,7 +306,7 @@ function initMap() {
 async function drawLandAreas(map) {
   const { data: landAreas, error } = await supabase
     .from('land_areas')
-    .select('id, path');
+    .select('id, owner_name, path, created_at');
   if (error) {
     console.error('Error fetching land areas:', error);
     return;
@@ -316,22 +316,22 @@ async function drawLandAreas(map) {
     if (typeof coords === 'string') {
       try { coords = JSON.parse(coords); } catch { return; }
     }
-    // Prepare popup content (customize as needed)
+    // Debug: See what fields are present
+    console.log(area);
     const popupContent = `
-      <b>Owner:</b> ${area.owner_name || 'N/A'}<br>
-      <b>ID:</b> ${area.id}
+      <b>Owner:</b> ${area.owner_name}<br>
+      <b>ID:</b> ${area.id}<br>
+      <b>Created:</b> ${area.created_at}
     `;
     if (
       coords.length > 2 &&
       coords[0][0] === coords[coords.length - 1][0] &&
       coords[0][1] === coords[coords.length - 1][1]
     ) {
-      // Closed polygon
       L.polygon(coords, { color: 'green', fillOpacity: 0.3 })
         .addTo(map)
         .bindPopup(popupContent);
     } else {
-      // Polyline
       L.polyline(coords, { color: 'green', weight: 6, opacity: 0.5 })
         .addTo(map)
         .bindPopup(popupContent);
