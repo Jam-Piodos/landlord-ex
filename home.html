@@ -67,6 +67,17 @@
 
     <main id="map" class="container">
         <div id="mapid"></div>
+        <div id="landarea-panel" class="landarea-panel expanded">
+          <button id="landarea-panel-toggle" class="landarea-panel-toggle" aria-label="Toggle Land Area Panel">&#9776;</button>
+          <div class="landarea-panel-content">
+            <div class="landarea-panel-header">
+              <span id="landarea-count">Land Areas: ...</span>
+            </div>
+            <ul id="landarea-list" class="landarea-list">
+              <!-- Land area items will be populated by JS -->
+            </ul>
+          </div>
+        </div>
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
@@ -80,19 +91,19 @@
             <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px;">
                 <button id="add-technician-btn" class="modal-btn save add-tech-btn"><span class="add-tech-icon">+</span></button>
             </div>
-            <table class="account-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- User rows will be populated by JavaScript -->
-                </tbody>
-            </table>
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User rows will be populated by JavaScript -->
+            </tbody>
+        </table>
         </div>
     </main>
 
@@ -187,8 +198,8 @@
     <label for="edit-user-email">Email</label>
     <input id="edit-user-email" type="email" />
     <!-- Remove Role label and select input from Edit User modal -->
-    <button class="modal-btn save">Save</button>
-    <button class="modal-btn cancel">Cancel</button>
+      <button class="modal-btn save">Save</button>
+      <button class="modal-btn cancel">Cancel</button>
     <input type="hidden" id="edit-user-id" />
   </div>
 </div>

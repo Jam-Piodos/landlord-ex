@@ -270,6 +270,29 @@ function initMap() {
   var map = L.map('mapid');
   window.leafletMap = map;
 
+  // Add zoomToLandArea event handler
+  window.addEventListener('zoomToLandArea', function(e) {
+    const area = e.detail;
+    if (!area || !area.path) return;
+    let coords = area.path;
+    if (typeof coords === 'string') {
+      try { coords = JSON.parse(coords); } catch {}
+    }
+    if (Array.isArray(coords) && coords.length > 0) {
+      if (Array.isArray(coords[0])) {
+        // Polygon or polyline
+        map.fitBounds(coords);
+        if (window._highlightLayer) map.removeLayer(window._highlightLayer);
+        window._highlightLayer = L.polygon(coords, {color: 'red', weight: 3, fillOpacity: 0.15}).addTo(map);
+      } else if (typeof coords[0] === 'number') {
+        // Single point
+        map.setView(coords, 16);
+        if (window._highlightLayer) map.removeLayer(window._highlightLayer);
+        window._highlightLayer = L.marker(coords).addTo(map);
+      }
+    }
+  });
+
   // Try to center on user's location
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -440,3 +463,55 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 });        
+
+// Land Area Panel Logic
+async function fetchAndRenderLandAreas() {
+  const { data: landAreas, error } = await supabase
+    .from('land_areas')
+    .select('id, owner_name, path');
+  if (error) {
+    document.getElementById('landarea-count').textContent = 'Land Areas: Error';
+    document.getElementById('landarea-list').innerHTML = '<li>Error loading land areas</li>';
+    return;
+  }
+  document.getElementById('landarea-count').textContent = `Land Areas: ${landAreas.length}`;
+  const list = document.getElementById('landarea-list');
+  list.innerHTML = '';
+  landAreas.forEach((area, idx) => {
+    const li = document.createElement('li');
+    li.textContent = area.owner_name || `Land Area ${idx+1}`;
+    li.onclick = function() {
+      // Custom event or function to zoom/highlight on map
+      if (window.zoomToLandArea) {
+        window.zoomToLandArea(area);
+      } else {
+        // Dispatch a custom event for map logic to handle
+        const event = new CustomEvent('zoomToLandArea', { detail: area });
+        window.dispatchEvent(event);
+      }
+      // Highlight selected
+      document.querySelectorAll('.landarea-list li').forEach(el => el.classList.remove('active'));
+      li.classList.add('active');
+    };
+    list.appendChild(li);
+  });
+}
+// Panel collapse/expand
+const landareaPanel = document.getElementById('landarea-panel');
+const landareaToggle = document.getElementById('landarea-panel-toggle');
+if (landareaToggle) {
+  landareaToggle.onclick = function() {
+    landareaPanel.classList.toggle('collapsed');
+  };
+}
+// Fetch land areas when map is shown
+if (document.getElementById('map')) {
+  fetchAndRenderLandAreas();
+}
+// Optionally, re-fetch when returning to map
+window.navigateTo = (function(origNav) {
+  return function(sectionId) {
+    if (origNav) origNav(sectionId);
+    if (sectionId === 'map') fetchAndRenderLandAreas();
+  };
+})(window.navigateTo);        
